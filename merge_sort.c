@@ -30,7 +30,8 @@ void    sort_subarray(void *t, const int halflen, const int max2, t_data *data)
             curs2 += data->esize;
             continue ;
         }
-        memmove(t + curs1 + curs2, t1 + curs1, data->esize);
+        if (curs2)
+            memmove(t + curs1 + curs2, t1 + curs1, data->esize);
         curs1 += data->esize;
     }
     free(t1);
