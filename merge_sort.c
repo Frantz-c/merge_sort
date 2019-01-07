@@ -46,7 +46,7 @@ void    merge_sort(void *t, size_t esize, int length, int (*cmp)(void*,void*))
     data.esize = esize;
     data.cmp = cmp;
     sortsiz = 2;
-    while (sortsiz < length)
+    while (sortsiz <= length)
     {
         sortpos = 0;
         while ((sortpos + sortsiz) <= length)
