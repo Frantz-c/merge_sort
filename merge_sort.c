@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   merge_sort.c                                     .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: fcordon <marvin@le-101.fr>                 +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2019/01/09 19:15:05 by fcordon      #+#   ##    ##    #+#       */
+/*   Updated: 2019/05/07 19:40:43 by fcordon     ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -10,7 +23,7 @@ struct  s_data
     size_t  esize;
 };
 
-void    sort_subarray(void *t, const int halflen, const int max2, t_data *data)
+static void	sort_subarray(void *t, const int halflen, const int max2, t_data *data)
 {
     void        *t2;
     void        *t1;
@@ -42,6 +55,7 @@ void    merge_sort(void *t, size_t esize, int length, int (*cmp)(void*,void*))
     t_data  data;
     int     sortsiz;
     int     sortpos;
+	int		remsiz;
 
     data.esize = esize;
     data.cmp = cmp;
@@ -55,31 +69,12 @@ void    merge_sort(void *t, size_t esize, int length, int (*cmp)(void*,void*))
                         (sortsiz * esize) / 2, &data);
             sortpos += sortsiz;
         }
-        if (sortpos < length && length - sortpos > 1)
-            sort_subarray(t + sortpos, ((length - sortpos) * esize) / 2,
-                        ((length - sortpos) * esize) / 2, &data);
-        sortsiz *= 2;
+		if ((remsiz = length - sortpos) > 1)
+			sort_subarray(t + (sortpos * esize), (sortsiz / 2) * esize,
+						(remsiz - (sortsiz / 2)) * esize, &data);
+        sortsiz <<= 1;
     }
-    if (sortsiz > length)
-        sort_subarray(t, (sortsiz * esize) / 2,
+    if (sortsiz > length && length > 0)
+        sort_subarray(t, (sortsiz / 2) * esize,
                     (length - (sortsiz / 2)) * esize, &data);
-}
-
-int     cmp_func(void *a, void *b)
-{
-    return (*(int*)a - *(int*)b);
-}
-
-int     main(void)
-{
-    int     t[7] = {6, 3, 5, 4, 1, 0, 2};
-
-    merge_sort(t, sizeof(int), 7, cmp_func);
-    int i = 0;
-    while (i < 7)
-    {
-        printf("%d\n", t[i]);
-        i++;
-    }
-    return (0);
 }
